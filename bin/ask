@@ -1,0 +1,13 @@
+# Based on http://djm.me/ask
+script_name="${1:-this}"
+echo -n "Run ${script_name} script? [y/n]"
+read REPLY </dev/tty
+
+if [ -z "$REPLY" ]; then
+    REPLY="n"
+fi
+
+case "$REPLY" in
+    Y*|y*) exit 0 ;;
+    *) exit 1 ;;
+esac
