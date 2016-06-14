@@ -1,6 +1,14 @@
+#!/usr/bin/env bash
+
 # Based on http://djm.me/ask
-script_name="${1:-this}"
-echo -n "Run ${script_name} script? [y/n]"
+
+if [[ $OVERRIDE_PROMPT ]]; then
+	echo -n "$1"
+else
+	script_name="${1:-this}"
+	echo -n "Run ${script_name} script? [y/n]"
+fi
+
 read REPLY </dev/tty
 
 if [ -z "$REPLY" ]; then

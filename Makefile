@@ -1,6 +1,6 @@
 SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
-.PHONY : android android-devel aws bootstrap core core-extras clean-homebrew clean-home data-big data-extras data-sql docker fonts google-cloud gui-browsers gui-core gui-terminal gui-editors gui-extras gui-quick-look help homebrew homebrew-upgrade heroku java java-libs java-devel node node-libs osx-install osx-install-recommended osx-config php python python-devel sudo uninstall
+.PHONY : android android-devel aws bootstrap core core-extras clean-homebrew clean-home data-big data-extras data-sql docker fonts google-cloud gui-browsers gui-core gui-terminal gui-editors gui-extras gui-quick-look hashicorp help homebrew homebrew-upgrade heroku java java-libs java-devel node node-libs osx-install osx-install-recommended osx-config php python python-devel sudo uninstall
 
 android: homebrew ## Install the Android SDK
 	brew install android-sdk
@@ -10,10 +10,10 @@ android-devel: android ## Install Android Studio for Android Development
 
 aws: homebrew ## Install the AWS CLI and configure your local environment.
 	brew install awscli
-	@./bin/ask "AWS configuration" && aws --configure ||:
+	@./scripts/ask.sh "AWS configuration" && aws --configure ||:
 
 bootstrap: core ## Bootstraps your Git confiugration with your user information.
-	@./bin/ask "OSX shell bootstrap" && ./scripts/bootstrap.sh ||:
+	@./scripts/ask.sh "OSX shell bootstrap" && ./scripts/bootstrap.sh ||:
 
 core: homebrew ## Install core utilities for a better terminal experience.
 	brew install coreutils
@@ -63,7 +63,7 @@ clean-homebrew: ## Cleanup after Homebrew.
 	brew cleanup
 
 clean-home: ## Clean home directory of old configuration.
-	@./bin/ask "Home directory cleanup" && ./scripts/clean.sh ||:
+	@./scripts/ask.sh "Home directory cleanup" && ./scripts/clean.sh ||:
 
 data-big: homebrew ## Install Apache Spark for big data.
 	brew install apache-spark
@@ -88,7 +88,7 @@ fonts: homebrew ## Install font tools for OSX.
 
 google-cloud: homebrew ## Install the Google Cloud SDK and initialize the gcloud tool to work with the Google Platform.
 	brew cask install google-cloud-sdk
-	@./bin/ask "Google Cloud initialization" && gcloud init ||:
+	@./scripts/ask.sh "Google Cloud initialization" && gcloud init ||:
 
 gui-browsers: homebrew ## Install GUI web-browsers to connect to the Internet on OSX.
 	brew cask install google-chrome
@@ -100,7 +100,7 @@ gui-core: homebrew ## Install core GUI tools for OSX.
 
 gui-terminal:
 	# Installing iterm2 through Homebrew is at the moment broken when you auto-update
-	@./bin/ask "iTerm installer" && ./scripts/install_iterm2.sh ||:
+	@./scripts/ask.sh "iTerm installer" && ./scripts/install_iterm2.sh ||:
 
 gui-editors: homebrew ## Install GUI editor tools for OSX.
 	brew install macvim --custom-icons --with-override-system-vim --with-lua --with-luajit
@@ -120,6 +120,9 @@ gui-extras: homebrew ## Install extra GUI tools for OSX.
 gui-quick-look: homebrew ## Install quick-look tools for OSX.
 	brew cask install qlcolorcode qlstephen qlmarkdown quicklook-json qlprettypatch quicklook-csv betterzipql qlimagesize webpquicklook suspicious-package
 
+hashicorp: sudo ## Install Hashicorp tools for OSX
+	@./scripts/ask.sh "Hashicorp install" && ./scripts/hashicorp_all.sh ||:
+	
 # Credit: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help: ## Displays help for all targets
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -127,10 +130,10 @@ help: ## Displays help for all targets
 heroku: homebrew ## Installs and updates the Heroku toolbox, and logs you in.
 	brew install heroku-toolbelt
 	heroku update
-	@./bin/ask "Heroku login" && heroku login ||:
+	@./scripts/ask.sh "Heroku login" && heroku login ||:
 
 homebrew: sudo ## Installs Homebrew.
-	@./bin/ask "Homebrew install" && ./scripts/install.sh ||:
+	@./scripts/ask.sh "Homebrew install" && ./scripts/homebrew_all.sh ||:
 
 homebrew-upgrade: homebrew ## Upgrades Homebrew.
 	brew upgrade --all
@@ -162,7 +165,7 @@ osx-install: sudo ## Updates OSX and installs xcode libraries necessary for Home
 	xcode-select --install
 
 osx-config: osx-install ## Configures OSX with developer-optiumized settings.
-	@./bin/ask "Developer-Optimized OSX Defaults" && ./scripts/config.sh ||:
+	@./scripts/ask.sh "Developer-Optimized OSX Defaults" && ./scripts/config.sh ||:
 
 php: homebrew ## Installs PHP 5.5 for OSX.
 	brew install homebrew/php/php55 --with-gmp

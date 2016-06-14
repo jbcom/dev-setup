@@ -16,11 +16,11 @@ popd
 declare -a install_scripts=('iterm2' 'ruby' 'vim' 'zsh')
 
 for script_name in "${install_scripts[@]}"; do
-	./bin/ask "${script_name} installation" && ./scripts/install_${script_name}.sh
+	./scripts/ask.sh "${script_name} installation" && ./scripts/install_${script_name}.sh
 done
 
 declare -a config_scripts=('osx' 'git')
 
 for config_name in "${config_scripts[@]}"; do
-	./bin/ask "${config_name} configuration" && ./scripts/config_${config_name}.sh
+	./scripts/ask.sh "${config_name} configuration" && ./scripts/config_${config_name}.sh
 done
