@@ -123,9 +123,8 @@ gui-quick-look: homebrew ## Install quick-look tools for OSX.
 hashicorp: sudo ## Install Hashicorp tools for OSX
 	@./scripts/ask.sh "Hashicorp install" && ./scripts/hashicorp_all.sh ||:
 	
-# Credit: http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 help: ## Displays help for all targets
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | sed 's/##/:/g' | ./scripts/help.sh
 
 heroku: homebrew ## Installs and updates the Heroku toolbox, and logs you in.
 	brew install heroku-toolbelt
